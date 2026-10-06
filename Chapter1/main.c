@@ -5,9 +5,14 @@ int hello(void) {
   return 0;
 }
 
+int fahr_to_cels(float farh) {
+  float celsius = (5.0 / 9.0) * (farh - 32.0);
+  return celsius;
+};
+
 int fahr_cels(void) {
   /* Print Farhenheit-Celcius table for fahr = 0, 20, ..., 300 */
-  float fahr, celsius;
+  float fahr;
   float lower, upper, step;
 
   lower = 0;
@@ -18,7 +23,7 @@ int fahr_cels(void) {
   printf("fahr | celsius\n");
   printf("______________\n");
   while (fahr <= upper) {
-    celsius = (5.0 / 9.0) * (fahr - 32.0);
+    float celsius = fahr_to_cels(fahr);
     printf("%3.0f  | %6.1f\n", fahr, celsius);
     fahr = fahr + step;
   }
@@ -170,6 +175,79 @@ int array_counts(void) {
   return 0;
 }
 
+int power(int base, int n) {
+  int i, p;
+  p = 1;
+  for (i = 1; i <= n; ++i) {
+    p = p * base;
+  }
+  return p;
+}
+
+int test_power(void) {
+  int i;
+  for (i = 0; i < 10; ++i) {
+    printf("%d %d %d\n", i, power(2, i), power(-3, i));
+  }
+  return 0;
+}
+
+#define MAXLINE 10 /*maximum input line lenght*/
+
+int _getline(char s[], int lim) {
+  int c, i;
+
+  for (i = 0; i < lim - 1 && (c = getchar()) != EOF && c != '\n'; ++i) {
+    s[i] = c;
+  }
+  if (c == '\n') {
+    s[i] = '\0';
+    ++i;
+  }
+  s[i] = '\0';
+  return i;
+}
+
+void copy(char to[], char from[]) {
+  int i;
+
+  i = 0;
+  while ((to[i] = from[i]) != '\0') {
+    ++i;
+  }
+}
+
+int get_line_main(void) {
+  printf("in get_line_main\n");
+  int len; /*current line length */
+  int total;
+  int max; /*maximum length seen so far*/
+  char last;
+  char line[MAXLINE]; /*current input line */
+  char rest[MAXLINE];
+  char longest[MAXLINE]; /*longest line saved here */
+
+  max = 0;
+  while ((len = _getline(line, MAXLINE)) > 0) {
+    total = len;
+    last = line[len - 1];
+
+    while (last != '\n' && (len = _getline(rest, MAXLINE)) > 0) {
+      total += len;
+      last = rest[len - 1];
+    }
+
+    if (total > max) {
+      max = total;
+      copy(longest, line);
+    }
+  }
+  if (max > 0) {
+    printf("length: %d\n%s\n", max, longest);
+  }
+  return 0;
+}
+
 int main(void) {
   // hello();
   // fahr_cels();
@@ -183,6 +261,8 @@ int main(void) {
   // count_chars_two();
   // line_count();
   // word_counting();
-  array_counts();
+  // array_counts();
+  get_line_main();
+
   return 0;
 }
